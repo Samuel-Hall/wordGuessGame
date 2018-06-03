@@ -1,0 +1,17 @@
+body {
+    background-color: #968BE5;
+}
+
+header {
+    background-color: #2A2740;
+    color: #ffffff;
+}
+
+.mainContent {
+    background-color: #A69BFF;
+}
+
+img {
+    height: 350px;
+    width: 350px;
+}
