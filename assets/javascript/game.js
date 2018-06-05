@@ -4,7 +4,6 @@ $(document).ready(function() {
     var oldWins = 0;
     var losses = 0;
     var oldLosses = 0;
-    var wrongGuess = 5;
     var alreadyGuessed = [];
 
     var forrestGump = {
@@ -34,8 +33,10 @@ $(document).ready(function() {
 
     var movieList = [forrestGump, matrix, jurassicPark, jaws, lordOfTheRings, nationalTreasure];
 
-    function wordGuessingGame() { 
-        $("#guessesLeft").text(wrongGuess);       
+    function wordGuessingGame() {
+        var wrongGuess = 5;
+        $("#guessesLeft").text(wrongGuess);
+        alreadyGuessed = [];       
         var movieObject = movieList[Math.floor(0 + Math.random() * movieList.length)];
         movieObject.title = movieObject.title.toUpperCase();
         var indices = [];
@@ -51,8 +52,8 @@ $(document).ready(function() {
                     dashes.push("-");
                 }
             }            
-            $("#wordGuess").append(dashes);
-            $("#hint").append("<img src=\"" + movieObject.img + "\">" );
+            $("#wordGuess").html(dashes);
+            $("#hint").html("<img src=\"" + movieObject.img + "\">" );
         };
 
         function guessLetters() {
@@ -89,11 +90,17 @@ $(document).ready(function() {
                     alert("YOU WIN!");
                     wins++;
                     $("#winCount").text(wins);
+                    $("#lettersGuessed").empty();
+                    wordGuessingGame();
+                    
                 }
                 if (wrongGuess == 0) {
                     alert("YOU LOSE!");
                     losses++;
                     $("#lossCount").text(losses);
+                    $("#lettersGuessed").empty();
+                    wordGuessingGame();
+                    
                 }
             };                     
         };
@@ -102,17 +109,16 @@ $(document).ready(function() {
         guessLetters();
     };
 
-    function newGame() {
-        if (wrongGuess === 0 || oldWins !== wins || oldLosses !== losses) {
-            wordGuessingGame();
-            wrongGuess = 5;
-            oldWins = wins;
-            oldLosses = losses;
-            alreadyGuessed = [];
-        }
-    };
+    wordGuessingGame();
 
-    wordGuessingGame();   
-    newGame();
+    if (oldWins < wins || oldLosses < losses) {
+        console.log("it worked");
+        wordGuessingGame();
+        wrongGuess = 5;
+        oldWins = wins;
+        oldLosses = losses;
+        alreadyGuessed = [];
+    }   
+    
 });
 
