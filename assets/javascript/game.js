@@ -1,9 +1,12 @@
 $(document).ready(function() {
 
     var wins = 0;
+    var oldWins = 0;
     var losses = 0;
-    var winCount = document.getElementById("winCount");
-    var lossCount = document.getElementById("lossCount");
+    var oldLosses = 0;
+    var wrongGuess = 5;
+    var alreadyGuessed = [];
+
     var forrestGump = {
         title: "Forrest Gump",
         img: "assets/images/forrest_gump.jpg"
@@ -31,53 +34,85 @@ $(document).ready(function() {
 
     var movieList = [forrestGump, matrix, jurassicPark, jaws, lordOfTheRings, nationalTreasure];
 
-    // document.onkeyup = function(event) {
-    //     userText.textContent = event.key;
-    //   };
-
-    // Display a random image and blank word pair from the movieList array
-
-    // $("#random-button").on("click", function() {
-    //     var rand = Math.floor(100000000 + Math.random() * 900000000);
-    //     $("#random-number").prepend("<p><strong>" + rand + "</strong></p>");
-    //   })
-
-    // function showImage() {
-    //     var movieObject = movieList[Math.floor(0 + Math.random() * movieList.length)];
-    //     $("#hint").append("<img src=\"" + movieObject.img + "\">" );
-    //     $("#wordGuess").append(movieObject.title);
-    // }
-    function showMovieObject() {
+    function wordGuessingGame() { 
+        $("#guessesLeft").text(wrongGuess);       
         var movieObject = movieList[Math.floor(0 + Math.random() * movieList.length)];
-        var hiddenTitle = [];
-        for (i = 0; i < movieObject.title.length; i++) {
-            if (movieObject.title[i] === " ") {
-                hiddenTitle.push(" ");
-            }
-            else {
-                hiddenTitle.push("-");
-            }
+        movieObject.title = movieObject.title.toUpperCase();
+        var indices = [];
+        var dashes = [];
+        var title = movieObject.title.split('');
+
+        function showMovieObject(){
+            for (i = 0; i < movieObject.title.length; i++) {
+                if (movieObject.title[i] === " ") {
+                    dashes.push(" ");
+                }
+                else {
+                    dashes.push("-");
+                }
+            }            
+            $("#wordGuess").append(dashes);
+            $("#hint").append("<img src=\"" + movieObject.img + "\">" );
+        };
+
+        function guessLetters() {
+            document.onkeydown = function(event) {
+                var userGuess = event.key;
+                userGuess = userGuess.toUpperCase();
+
+                if (alreadyGuessed.includes(userGuess)) {
+                    alert("You've already guessed that letter!");
+                }
+                else {
+                alreadyGuessed.push(userGuess);
+                $("#lettersGuessed").append(userGuess + ", ");
+                };
+
+                if (movieObject.title.includes(userGuess)) {
+                    var movieIndex = movieObject.title.indexOf(userGuess);
+                    for (i = 0; i < movieObject.title.length; i++) {
+                        if (movieObject.title[i] === userGuess) {
+                            dashes[i] = userGuess;
+                        }
+                    }
+                }
+                else {
+                    wrongGuess--;
+                    $("#guessesLeft").text(wrongGuess);
+                };
+
+                dashes = dashes.join("");
+                $("#wordGuess").text(dashes);
+                dashes = dashes.split('');
+                                                    
+                if (title.join("") === dashes.join("")) {
+                    alert("YOU WIN!");
+                    wins++;
+                    $("#winCount").text(wins);
+                }
+                if (wrongGuess == 0) {
+                    alert("YOU LOSE!");
+                    losses++;
+                    $("#lossCount").text(losses);
+                }
+            };                     
+        };
+         
+        showMovieObject();
+        guessLetters();
+    };
+
+    function newGame() {
+        if (wrongGuess === 0 || oldWins !== wins || oldLosses !== losses) {
+            wordGuessingGame();
+            wrongGuess = 5;
+            oldWins = wins;
+            oldLosses = losses;
+            alreadyGuessed = [];
         }
-        for (i = 0; i < hiddenTitle.length; i++) {
-            $("#wordGuess").append("<span class=letter_" + i + ">" + hiddenTitle[i] + "</span>");
-        }
-        $("#hint").append("<img src=\"" + movieObject.img + "\">" );
-    }
+    };
 
-    document.onkeydown = function(event) {
-    }
-
-
-    showMovieObject();
-
-    // var userGuess;
-    // function letterGuess() {
-    //     userGuess = 
-    // }
-
-    // document.onkeyup = function(event) {
-    //     userText.textContent = event.key;
-    //   };
-
+    wordGuessingGame();   
+    newGame();
 });
 
