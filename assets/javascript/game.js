@@ -111,14 +111,14 @@ $(document).ready(function() {
 
     wordGuessingGame();
 
-    if (oldWins < wins || oldLosses < losses) {
-        console.log("it worked");
-        wordGuessingGame();
-        wrongGuess = 5;
-        oldWins = wins;
-        oldLosses = losses;
-        alreadyGuessed = [];
-    }   
+    // if (oldWins < wins || oldLosses < losses) {
+    //     console.log("it worked");
+    //     wordGuessingGame();
+    //     wrongGuess = 5;
+    //     oldWins = wins;
+    //     oldLosses = losses;
+    //     alreadyGuessed = [];
+    // }   
     
 });
 
